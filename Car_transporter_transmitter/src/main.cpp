@@ -7,19 +7,12 @@
 
 // void readMacAddress();
 
-int int_value;
-float float_value;
-bool bool_value = true;
 bool bMacAddressReaded = false;
 // MAC Address of responder - edit as required
 uint8_t broadcastAddress[] = {0x30, 0xc9, 0x22, 0x27, 0xe8, 0x28};
 
 // Define a data structure
 typedef struct struct_message {
-  char a[32];
-  int b;
-  float c;
-  bool d;
   bool relaysActions[16];
 } struct_message;
 
@@ -78,7 +71,6 @@ void setup() {
     Serial.println("Failed to add peer");
     return;
   }    
- myData.b++;
 }
   
 
@@ -88,20 +80,7 @@ void loop() {
 
   // Create test data
 
-  // Generate a random integer
-  int_value = random(1,20);
-
-  // Use integer to make a new float
-  float_value = 1.3 * int_value;
-
-  // Invert the boolean value
-  bool_value = !bool_value;
   
-  // Format structured data
-  strcpy(myData.a, "Welcome to the Workshop!");
-  myData.b = int_value;
-  myData.c = float_value;
-  myData.d = bool_value;
   for (int i = 0; i < 14; i++)
   {
     myData.relaysActions[i] = digitalRead(switchesPin[i]);

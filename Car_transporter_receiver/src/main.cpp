@@ -14,10 +14,6 @@ int relaysPin[] = {32, 33, 25, 26, 27, 14, 12, 17, 5, 18, 19, 21, 22, 23};
 
 // Define a data structure
 typedef struct struct_message {
-  char a[32];
-  int b;
-  float c;
-  bool d;
   bool relaysActions[16];
 } struct_message;
  
@@ -29,16 +25,6 @@ struct_message myData;
 void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
   memcpy(&myData, incomingData, sizeof(myData));
   Serial.print("Data received: ");
-  Serial.println(len);
-  Serial.print("Character Value: ");
-  Serial.println(myData.a);
-  Serial.print("Integer Value: ");
-  Serial.println(myData.b);
-  Serial.print("Float Value: ");
-  Serial.println(myData.c);
-  Serial.print("Boolean Value: ");
-  Serial.println(myData.d);
-  Serial.println();
   for (int i = 0; i < 14; i++)
   {
     digitalWrite(relaysPin[i], !myData.relaysActions[i]);
