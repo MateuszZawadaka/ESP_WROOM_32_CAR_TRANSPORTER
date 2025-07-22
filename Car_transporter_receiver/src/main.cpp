@@ -8,37 +8,24 @@
 #include <esp_now.h>
 #include <WiFi.h>
 #include <esp_wifi.h>
-
+#include<math.h>
 
 int relaysPin[] = {32, 33, 25, 26, 27, 14, 12, 17, 5, 18, 19, 21, 22, 23};
+int wpsPin = 13;
+long result;
 
-// Define a data structure
 typedef struct struct_message {
-  char a[32];
-  int b;
-  float c;
-  bool d;
   bool relaysActions[16];
 } struct_message;
  
-// Create a structured object
 struct_message myData;
  
- 
-// Callback function executed when data is received
-void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
+
+void OnDataRecv(const uint8_t *mac, const uint8_t *incomingData, int len) {
   memcpy(&myData, incomingData, sizeof(myData));
   Serial.print("Data received: ");
   Serial.println(len);
-  Serial.print("Character Value: ");
-  Serial.println(myData.a);
-  Serial.print("Integer Value: ");
-  Serial.println(myData.b);
-  Serial.print("Float Value: ");
-  Serial.println(myData.c);
-  Serial.print("Boolean Value: ");
-  Serial.println(myData.d);
-  Serial.println();
+  
   for (int i = 0; i < 14; i++)
   {
     digitalWrite(relaysPin[i], !myData.relaysActions[i]);
@@ -47,27 +34,42 @@ void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
 }
  
 void setup() {
-  // Set up Serial Monitor
   Serial.begin(115200);
   for (int i = 0; i < 14; i++)
   {
     pinMode(relaysPin[i], OUTPUT);
   }
+  pinMode(wpsPin, INPUT_PULLUP);
   
-  
-  // Set ESP32 as a Wi-Fi Station
   WiFi.mode(WIFI_STA);
- 
-  // Initilize ESP-NOW
+  const uint8_t defaultMacAddress[] = {0x30, 0xc9, 0x22, 0x27, 0xe8, 0x29};
+  esp_wifi_stop();
+  esp_wifi_set_mac(WIFI_IF_STA, defaultMacAddress);
+  Serial.print("Current MAC: ");
+  Serial.println(WiFi.macAddress());
+  esp_wifi_start();
+
   if (esp_now_init() != ESP_OK) {
-    Serial.println("Error initializing ESP-NOW");
+    Serial.println("Error initializing ESP-NOW");    
     return;
   }
   
-  // Register callback function
+  
   esp_now_register_recv_cb(OnDataRecv);
 }
  
 void loop() {
- 
+  if (WiFi.status() != WL_CONNECTION_LOST)
+  {
+      for (int i = 0; i < 14; i++)
+      {
+        digitalWrite(relaysPin[i], false);
+        delay(100);
+      }
+
+  }
+  
 }
+
+
+
