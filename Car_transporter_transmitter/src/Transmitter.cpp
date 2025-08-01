@@ -34,7 +34,6 @@ void ESPNowTransmitter::update() {
     for (int i = 0; i < peerCount; i++) {
         esp_now_send(knownPeers[i], (uint8_t*)&currentData, sizeof(currentData));
     }
-    delay(100);
 }
 
 void ESPNowTransmitter::readMacAddress() {
@@ -74,7 +73,6 @@ void ESPNowTransmitter::addPeer(const uint8_t* mac) {
     }
 }
 
-// Static methods
 void ESPNowTransmitter::OnDataRecv(const uint8_t* mac, const uint8_t* data, int len) {
     if (!instance) return;
     

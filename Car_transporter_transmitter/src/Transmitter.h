@@ -15,7 +15,7 @@ private:
     };
 
     struct HelloMessage {
-        char msg[10] = "hello";
+        char msg[10] = "hello :)";
     };
 
     const int switchesPins[SWITCHES_COUNT] = {32, 33, 25, 26, 27, 14, 12, 23, 22, 21, 19, 18, 5, 17};
